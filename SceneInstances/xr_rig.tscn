@@ -1,0 +1,69 @@
+[gd_scene load_steps=13 format=3 uid="uid://72c8db1ld02p"]
+
+[ext_resource type="Script" path="res://Scripts/XRSetup.gd" id="1_8flyx"]
+[ext_resource type="PackedScene" uid="uid://cnwp7ndjr4s8y" path="res://Models/Quest2Controllers/OculusQuest2TouchController_Left.gltf" id="2_fjl2k"]
+[ext_resource type="PackedScene" uid="uid://c12tlrn8ab3yh" path="res://SceneInstances/PointingController.tscn" id="2_g0x3g"]
+[ext_resource type="PackedScene" uid="uid://bc8lh0rihgxvi" path="res://Models/Quest2Controllers/OculusQuest2TouchController_Right.gltf" id="3_2r8c8"]
+[ext_resource type="Script" path="res://Scripts/PointingInteraction.gd" id="4_a2mb7"]
+[ext_resource type="Material" uid="uid://t55giypumc48" path="res://Materials/blue_laser.tres" id="5_00a7o"]
+[ext_resource type="Script" path="res://Scripts/LineRenderer.gd" id="6_yma2q"]
+[ext_resource type="Material" uid="uid://cneje2guapeai" path="res://Materials/red_laser.tres" id="8_yb2n1"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_277or"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6o5ht"]
+radius = 0.05
+height = 1.0
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_7iq6o"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6v73u"]
+radius = 0.05
+height = 1.0
+
+[node name="XROrigin3D" type="XROrigin3D"]
+script = ExtResource("1_8flyx")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="."]
+
+[node name="LeftPointingController" parent="." instance=ExtResource("2_g0x3g")]
+script = ExtResource("4_a2mb7")
+
+[node name="OculusQuest2TouchController_Left" parent="LeftPointingController" instance=ExtResource("2_fjl2k")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="LineRenderer" type="MeshInstance3D" parent="LeftPointingController"]
+material_override = ExtResource("5_00a7o")
+mesh = SubResource("ImmediateMesh_277or")
+script = ExtResource("6_yma2q")
+
+[node name="Area3D" type="Area3D" parent="LeftPointingController/LineRenderer"]
+collision_layer = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LeftPointingController/LineRenderer/Area3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.6)
+shape = SubResource("CapsuleShape3D_6o5ht")
+
+[node name="RightPointingController" parent="." instance=ExtResource("2_g0x3g")]
+tracker = &"right_hand"
+script = ExtResource("4_a2mb7")
+
+[node name="OculusQuest2TouchController_Right" parent="RightPointingController" instance=ExtResource("3_2r8c8")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="LineRenderer" type="MeshInstance3D" parent="RightPointingController"]
+material_override = ExtResource("8_yb2n1")
+mesh = SubResource("ImmediateMesh_7iq6o")
+script = ExtResource("6_yma2q")
+
+[node name="Area3D" type="Area3D" parent="RightPointingController/LineRenderer"]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RightPointingController/LineRenderer/Area3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.6)
+shape = SubResource("CapsuleShape3D_6v73u")
+
+[connection signal="button_pressed" from="LeftPointingController" to="LeftPointingController" method="_on_button_pressed"]
+[connection signal="area_entered" from="LeftPointingController/LineRenderer/Area3D" to="LeftPointingController" method="_on_area_3d_area_entered"]
+[connection signal="button_pressed" from="RightPointingController" to="RightPointingController" method="_on_button_pressed"]
+[connection signal="area_entered" from="RightPointingController/LineRenderer/Area3D" to="RightPointingController" method="_on_area_3d_area_entered"]

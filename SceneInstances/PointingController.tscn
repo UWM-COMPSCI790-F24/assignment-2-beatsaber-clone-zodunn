@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c12tlrn8ab3yh"]
+
+[ext_resource type="AudioStream" uid="uid://b2sy3i172u6ty" path="res://Sounds/lego-breaking.wav" id="1_6e1o7"]
+
+[node name="Controller" type="XRController3D"]
+tracker = &"left_hand"
+
+[node name="DestroySound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_6e1o7")

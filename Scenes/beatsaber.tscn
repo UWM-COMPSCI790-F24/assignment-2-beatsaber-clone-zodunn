@@ -1,3 +1,34 @@
-[gd_scene format=3 uid="uid://1amk3a8reep"]
+[gd_scene load_steps=7 format=3 uid="uid://1amk3a8reep"]
+
+[ext_resource type="PackedScene" uid="uid://72c8db1ld02p" path="res://SceneInstances/xr_rig.tscn" id="1_jbo80"]
+[ext_resource type="Script" path="res://Scripts/CubeSpawner.gd" id="2_d4yxl"]
+[ext_resource type="PackedScene" uid="uid://df4v4kt8f1t4f" path="res://SceneInstances/MovingCube.tscn" id="3_ymg60"]
+
+[sub_resource type="Environment" id="Environment_g7713"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cow84"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tdmkd"]
+size = Vector3(10, 0.1, 10)
 
 [node name="Node3D" type="Node3D"]
+
+[node name="XROrigin3D" parent="." instance=ExtResource("1_jbo80")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_g7713")
+camera_attributes = SubResource("CameraAttributesPractical_cow84")
+script = ExtResource("2_d4yxl")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="WorldEnvironment"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="WorldEnvironment/StaticBody3D"]
+size = Vector3(10, 0.1, 10)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldEnvironment/StaticBody3D"]
+shape = SubResource("BoxShape3D_tdmkd")
+
+[node name="CSGBox3D" parent="WorldEnvironment" instance=ExtResource("3_ymg60")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 5.63451, 3.95363)
